@@ -18,7 +18,9 @@ export const action: ActionFunction = async ({ request }) => {
   let votes = Number(formData.get("votes"));
   let id = formData.get("id");
 
+  console.log("--- ACTION SLEEP BEGIN");
   await sleep(1000);
+  console.log("--- ACTION SLEEP END");
 
   console.log("--- ACTION DB BEGIN");
   db.prepare(`UPDATE post SET votes = ${votes + 1} WHERE id = ${id};`).run();
@@ -38,7 +40,12 @@ function PostItem({ post }: { post: LoaderData[0] }) {
     <fetcher.Form method="post">
       <div>
         <input type="hidden" name="id" value={post.id} />
-        <button type="submit" name="votes" value={post.votes}>
+        <button
+          disabled={Boolean(fetcher.submission)}
+          type="submit"
+          name="votes"
+          value={post.votes}
+        >
           {post.votes}
         </button>
         <Link to={post.id.toString()}>{post.title}</Link>
